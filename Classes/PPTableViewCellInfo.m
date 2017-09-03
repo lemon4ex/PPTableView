@@ -9,6 +9,10 @@
 #import "PPTableViewCellInfo.h"
 #import "PPUtility.h"
 
+@interface PPTableViewCellInfo ()<UITextFieldDelegate>
+
+@end
+
 @implementation PPTableViewCellInfo
 
 - (instancetype)init
@@ -374,4 +378,110 @@
 {
     
 }
+
+- (PPTableViewCellInfo *)sliderLabelCellForSel:(SEL)sel target:(id)target title:(NSString *)title minimumValue:(double)minimumValue maximumValue:(double)maximumValue currentValue:(double)currentValue formatStyle:(NSInteger)formatStyle {
+    
+    PPTableViewCellInfo *cellInfo = [[PPTableViewCellInfo alloc] init];
+    [cellInfo addUserInfoValue:title forKey:@"title"];
+    [cellInfo addUserInfoValue:@(formatStyle) forKey:@"formatStyle"];
+    [cellInfo addUserInfoValue:@(minimumValue) forKey:@"minimumValue"];
+    [cellInfo addUserInfoValue:@(maximumValue) forKey:@"maximumValue"];
+    [cellInfo addUserInfoValue:@(currentValue) forKey:@"currentValue"];
+    cellInfo.makeSel = @selector(makeSliderLabelCell:);
+    cellInfo.makeTarget = cellInfo;
+    cellInfo.actionSel = sel;
+    cellInfo.actionTarget = target;
+    [cellInfo setValue:@(44) forKey:@"_fCellHeight"];
+    cellInfo.selectionStyle = 0;
+    cellInfo.accessoryType = 0;
+    
+    return cellInfo;
+}
+
+- (void)makeSliderLabelCell:(UITableViewCell *)cell {
+    [self makeNormalCell:cell];
+    
+//    AGDCellSliderView *sliderView = [[AGDCellSliderView alloc]initWithFrame:CGRectMake(0, 0, 120, 44)];
+//    sliderView.minimumValue = [[self getUserInfoValueForKey:@"minimumValue"] floatValue];
+//    sliderView.maximumValue = [[self getUserInfoValueForKey:@"maximumValue"] floatValue];
+//    sliderView.formatStyle = [[self getUserInfoValueForKey:@"formatStyle"] integerValue];
+//    sliderView.value = [[self getUserInfoValueForKey:@"currentValue"] floatValue];
+//    [sliderView addTarget:self.actionTarget action:self.actionSel forControlEvents:UIControlEventValueChanged];
+//    cell.accessoryView = sliderView;
+}
+
+- (PPTableViewCellInfo *)segmentedCellForSel:(SEL)sel target:(id)target title:(NSString *)title items:(NSArray *)items selectedIndex:(NSUInteger)index {
+    PPTableViewCellInfo *cellInfo = [[PPTableViewCellInfo alloc] init];
+    [cellInfo addUserInfoValue:title forKey:@"title"];
+    [cellInfo addUserInfoValue:items forKey:@"items"];
+    [cellInfo addUserInfoValue:@(index) forKey:@"index"];
+    cellInfo.makeSel = @selector(makeSegmentedCell:);
+    cellInfo.makeTarget = cellInfo;
+    cellInfo.actionSel = sel;
+    cellInfo.actionTarget = target;
+    [cellInfo setValue:@(44) forKey:@"_fCellHeight"];
+    cellInfo.selectionStyle = 0;
+    cellInfo.accessoryType = 0;
+    
+    return cellInfo;
+}
+
+- (void)makeSegmentedCell:(UITableViewCell *)cell {
+    [self makeNormalCell:cell];
+    NSArray *items = [self getUserInfoValueForKey:@"items"];
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:items];
+    segmentedControl.selectedSegmentIndex = [[self getUserInfoValueForKey:@"index"] integerValue];
+    segmentedControl.tintColor = [UIColor blueColor];
+    segmentedControl.frame = CGRectMake(0, 0, 120, 32);
+    [segmentedControl addTarget:self.actionTarget action:self.actionSel forControlEvents:UIControlEventValueChanged];
+    cell.accessoryView = segmentedControl;
+}
+
+
+- (PPTableViewCellInfo *)textFiledCellForSel:(SEL)sel target:(id)target title:(NSString *)title placeholder:(NSString *)placeholder text:(NSString *)text security:(BOOL)security focus:(BOOL)focus textAlignment:(NSTextAlignment)textAlignment keyboardType:(UIKeyboardType)keyboardType {
+    PPTableViewCellInfo *cellInfo = [[PPTableViewCellInfo alloc] init];
+    [cellInfo addUserInfoValue:title forKey:@"title"];
+    [cellInfo addUserInfoValue:placeholder forKey:@"placeholder"];
+    [cellInfo addUserInfoValue:text forKey:@"text"];
+    [cellInfo addUserInfoValue:@(security) forKey:@"security"];
+    [cellInfo addUserInfoValue:@(focus) forKey:@"focus"];
+    [cellInfo addUserInfoValue:@(textAlignment) forKey:@"textAlignment"];
+    [cellInfo addUserInfoValue:@(keyboardType) forKey:@"keyboardType"];
+    cellInfo.makeSel = @selector(makeTextFiledCell:);
+    cellInfo.makeTarget = cellInfo;
+    cellInfo.actionSel = sel;
+    cellInfo.actionTarget = target;
+    [cellInfo setValue:@(44) forKey:@"_fCellHeight"];
+    cellInfo.selectionStyle = 0;
+    cellInfo.accessoryType = 0;
+    
+    return cellInfo;
+}
+
+- (void)makeTextFiledCell:(UITableViewCell *)cell {
+    [self makeNormalCell:cell];
+    //    cell.textLabel.text = [self getUserInfoValueForKey:@"title"];
+    UITextField *textField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 120, 44)];
+    textField.placeholder = [self getUserInfoValueForKey:@"placeholder"];
+    textField.text = [self getUserInfoValueForKey:@"text"];
+    textField.secureTextEntry = [[self getUserInfoValueForKey:@"security"] boolValue];
+    textField.textAlignment = [[self getUserInfoValueForKey:@"textAlignment"] integerValue];
+    textField.returnKeyType = UIReturnKeyDone;
+    //    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    //    textField.enablesReturnKeyAutomatically = YES;
+    textField.delegate = self;
+    textField.keyboardType = [[self getUserInfoValueForKey:@"keyboardType"] integerValue];
+    if([[self getUserInfoValueForKey:@"focus"] boolValue])
+    {
+        [textField becomeFirstResponder];
+    }
+    [textField addTarget:self.actionTarget action:self.actionSel forControlEvents:UIControlEventEditingChanged];
+    cell.accessoryView = textField;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 @end

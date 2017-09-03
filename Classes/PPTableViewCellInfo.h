@@ -47,4 +47,9 @@
 + (instancetype)cellForMakeSel:(SEL)makeSel makeTarget:(id)makeTarget actionSel:(SEL)actionSel actionTarget:(id)actionTarget calHeightSel:(SEL)calHeightSel calHeightTarget:(id)calHeightTarget userInfo:(PPTableViewUserInfo *)userInfo;
 
 + (instancetype)centerCellForSel:(SEL)sel target:(id)target title:(NSString *)title;
+
++ (id)sliderLabelCellForSel:(SEL)sel target:(id)target title:(NSString *)title minimumValue:(double)minimumValue maximumValue:(double)maximumValue currentValue:(double)currentValue formatStyle:(NSInteger)formatStyle;
++ (id)segmentedCellForSel:(SEL)sel target:(id)target title:(NSString *)title items:(NSArray *)items selectedIndex:(NSInteger)index;
++ (id)textFiledCellForSel:(SEL)sel target:(id)target title:(NSString *)title placeholder:(NSString *)placeholder text:(NSString *)text security:(BOOL)security focus:(BOOL)focus textAlignment:(NSTextAlignment)textAlignment keyboardType:(UIKeyboardType)keyboardType;
+
 @end
